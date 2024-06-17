@@ -1,0 +1,83 @@
+﻿@page
+@model TheSafeOfThePilotBrothers.Pages.Grid
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Grid with Levers</title>
+    <style>
+        .grid-container {
+            display: grid;
+            gap: 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .grid-item {
+            background-color: #ccc;
+            padding: 0;
+            position: relative;
+            width: calc(50%);
+            padding-bottom: calc(50%);
+        }
+
+        .lever {
+            width: 100%;
+            height: 100%;
+            background-color: #842029;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .lever:hover {
+            background-color: #e0e0e0;
+        }
+
+        .lever-handle {
+            width: 50%;
+            height: 10%;
+            background-color: #666;
+            transition: transform 0.3s ease;
+        }
+
+        .lever.rotated .lever-handle {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+<form method="post">
+    <label for="gridSize">Write size of the grid:</label>
+    <input type="number" id="gridSize" name="gridSize" min="2" max="10" required />
+    <button type="submit">Create grid</button>
+</form>
+
+@if (Model.GridSize.HasValue)
+{
+<h2>Grid size @Model.GridSize.Value x @Model.GridSize.Value:</h2>
+<div class="grid-container" style="grid-template-columns: repeat(@Model.GridSize.Value, 1fr);">
+    @for (var i = 0; i < Model.GridSize.Value; i++)
+    {
+        for (var j = 0; j < Model.GridSize.Value; j++)
+        {
+        <div class="grid-item">
+            <div class="lever" onclick="rotateLever(this)">
+                <div class="lever-handle"></div>
+            </div>
+        </div>
+        }
+    }
+</div>
+}
+
+<script>
+    function rotateLever(lever) {
+        lever.classList.toggle('rotated');
+    }
+</script>
+</body>
+</html>
