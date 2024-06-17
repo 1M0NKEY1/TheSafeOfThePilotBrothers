@@ -8,44 +8,19 @@
     <style>
         .grid-container {
             display: grid;
-            gap: 10px;
-            padding: 20px;
+            gap: 40px;
+            padding: 40px;
             background-color: #f0f0f0;
+            justify-items: center;
         }
 
         .grid-item {
             background-color: #ccc;
             padding: 0;
             position: relative;
-            width: calc(50%);
-            padding-bottom: calc(50%);
-        }
-
-        .lever {
-            width: 100%;
-            height: 100%;
-            background-color: #842029;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: calc(50% - 10px);
+            padding-bottom: calc(50% - 10px);
             cursor: pointer;
-            border: 1px solid #ccc;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .lever:hover {
-            background-color: #e0e0e0;
-        }
-
-        .lever-handle {
-            width: 50%;
-            height: 10%;
-            background-color: #666;
-            transition: transform 0.3s ease;
-        }
-
-        .lever.rotated .lever-handle {
-            transform: rotate(90deg);
         }
     </style>
 </head>
@@ -64,20 +39,38 @@
     {
         for (var j = 0; j < Model.GridSize.Value; j++)
         {
-        <div class="grid-item">
-            <div class="lever" onclick="rotateLever(this)">
-                <div class="lever-handle"></div>
-            </div>
-        </div>
+        <div class="grid-item"></div>
         }
     }
 </div>
 }
 
 <script>
-    function rotateLever(lever) {
-        lever.classList.toggle('rotated');
+    function getRandomColor() {
+        var colors = ['#e74c3c', '#2ecc71']; // Red and green colors
+        var randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex];
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var gridItems = document.querySelectorAll('.grid-item');
+
+        gridItems.forEach(function(item) {
+            item.style.backgroundColor = getRandomColor();
+
+            item.addEventListener('click', function() {
+                var currentColor = this.style.backgroundColor;
+
+                if (currentColor === 'rgb(46, 204, 113)' || currentColor === '#2ecc71') {
+                    this.style.backgroundColor = '#e74c3c';
+                } else {
+                    this.style.backgroundColor = '#2ecc71';
+                }
+            });
+        });
+    });
+
 </script>
+
 </body>
 </html>

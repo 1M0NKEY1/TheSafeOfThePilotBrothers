@@ -9,6 +9,7 @@ public class Grid : PageModel
     [BindProperty(SupportsGet = true)]
     public int? GridSize { get; set; }
     public string ErrorMessage { get; private set; }
+    
     public List<Lever> Lever { get; set; }
 
     public void OnGet()
