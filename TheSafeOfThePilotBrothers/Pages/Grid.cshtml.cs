@@ -10,7 +10,7 @@ public class Grid : PageModel
     public int? GridSize { get; set; }
     public string ErrorMessage { get; private set; }
     
-    public List<Lever> Lever { get; set; }
+    public List<List<LeverModel>> LeverArray { get; set; }
 
     public void OnGet()
     {
