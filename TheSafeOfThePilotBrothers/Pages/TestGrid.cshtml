@@ -8,13 +8,13 @@
 
 <form method="post">
     <label for="size">Enter size:</label>
-    <input type="number" id="size" name="size" min="2" value="@Model.Lever.GetSize(0)">
+    <input type="number" id="size" name="size" min="2" value="@">
     <button type="submit">Update Grid</button>
 </form>
 
 <div>
     <table id="gridTable">
-        @for (int i = 0; i < Model.Lever.GetSize(0); i++)
+        @for (int i = 0; i < Model.LeverModel..GetSize(0); i++)
         {
         <tr>
             @for (int j = 0; j < Model.Lever.GetSize(1); j++)
@@ -43,38 +43,3 @@
         }
     </table>
 </div>
-
-@section Scripts {
-<script>
-    function toggleCellColor(cellId, row, col) {
-        // Переключение значения кликнутой ячейки
-        var cell = document.getElementById(cellId);
-        var cellValue = cell.innerText.trim() === '1' ? 0 : 1;
-        cell.innerText = cellValue.toString();
-        cell.style.backgroundColor = cellValue === 1 ? 'green' : 'red';
-
-        // Переключение всех ячеек в строке
-        for (var i = 0; i < @Model.Lever.GetSize(1); i++) {
-            if (i !== col) {
-                var rowCellId = "cell_" + row + "_" + i;
-                var rowCell = document.getElementById(rowCellId);
-                var rowValue = rowCell.innerText.trim() === '1' ? 0 : 1;
-                rowCell.innerText = rowValue.toString();
-                rowCell.style.backgroundColor = rowValue === 1 ? 'green' : 'red';
-            }
-        }
-
-        // Переключение всех ячеек в столбце
-        for (var j = 0; j < @Model.Lever.GetSize(0); j++) {
-            if (j !== row) {
-                var colCellId = "cell_" + j + "_" + col;
-                var colCell = document.getElementById(colCellId);
-                var colValue = colCell.innerText.trim() === '1' ? 0 : 1;
-                colCell.innerText = colValue.toString();
-                colCell.style.backgroundColor = colValue === 1 ? 'green' : 'red';
-            }
-        }
-}
-</script>
-
-}
