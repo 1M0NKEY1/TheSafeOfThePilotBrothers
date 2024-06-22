@@ -8,38 +8,39 @@
 
 <form method="post">
     <label for="size">Enter size:</label>
-    <input type="number" id="size" name="size" min="2" value="@">
+    <input type="number" id="size" name="newSize" min="2" value="@Model.GetLeverArray().GetLength(0)">
     <button type="submit">Update Grid</button>
 </form>
 
 <div>
     <table id="gridTable">
-        @for (int i = 0; i < Model.LeverModel..GetSize(0); i++)
+        @for (var i = 0; i < Model.GetLeverArray().GetLength(0); i++)
         {
-        <tr>
-            @for (int j = 0; j < Model.Lever.GetSize(1); j++)
-            {
-                <td>
-                    @{
-                        int cellValue = Model.Lever.LeverArray[i, j];
-                        string backgroundColor;
-                        if (cellValue == 1)
-                        {
-                            backgroundColor = "green";
+            <tr>
+                @for (var j = 0; j < Model.GetLeverArray().GetLength(1); j++)
+                {
+                    <td>
+                        @{
+                            int cellValue = Model.GetLeverArray()[i, j];
+                            string backgroundColor;
+                            if (cellValue == 1)
+                            {
+                                backgroundColor = "green";
+                            }
+                            else
+                            {
+                                backgroundColor = "red";
+                            }
+                            string cellId = $"cell_{i}_{j}";
                         }
-                        else
-                        {
-                            backgroundColor = "red";
-                        }
-                        string cellId = $"cell_{i}_{j}";
-                    }
-                    <div id="@cellId" style="width: 50px; height: 50px; background-color: @backgroundColor; cursor: pointer;"
-                         onclick="toggleCellColor('@cellId', @i, @j)">
-                        @* @cellValue.ToString() *@
-                    </div>
-                </td>
-            }
-        </tr>
+                        <div id="@cellId" class="gridCell"
+                             style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
+                             onclick="toggleCell(@cellId, @i, @j)">
+                            @* @cellValue.ToString() *@
+                        </div>
+                    </td>
+                }
+            </tr>
         }
     </table>
 </div>

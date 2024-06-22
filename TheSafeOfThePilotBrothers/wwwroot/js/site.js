@@ -1,13 +1,11 @@
-﻿function toggleLever() {
-    fetch('/lever/togglelever', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-        })
-        .catch(error => console.error('Ошибка:', error));
+﻿function toggleCell(cellId, row, col) {
+    $.ajax({
+        type: "POST",
+        url: "?handler=OnPostToggleChangeColor",
+        data: { row: row, col: col },
+        success: function (response) {
+            var backgroundColor = (response === "1") ? "green" : "red";
+            document.getElementById('@cellId').style.backgroundColor = backgroundColor;
+        },
+    });
 }

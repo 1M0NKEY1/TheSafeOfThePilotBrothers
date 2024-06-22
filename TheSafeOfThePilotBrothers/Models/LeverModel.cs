@@ -15,6 +15,7 @@ public class LeverModel
             }
         }
     }
+
     public LeverModel(int rows, int cols)
     {
         _lever = new int[rows, cols];
