@@ -6,25 +6,69 @@ namespace TheSafeOfThePilotBrothers.Pages;
 
 public class Grid : PageModel
 {
-    [BindProperty(SupportsGet = true)]
-    public int? GridSize { get; set; }
-    public string ErrorMessage { get; private set; }
-    
-    public List<List<LeverModel>> LeverArray { get; set; }
+    private readonly LeverModel _leverModel;
 
-    public void OnGet()
+    [BindProperty]
+    public int GridSize { get; set; }
+    
+    public Grid()
     {
-        
+        _leverModel = new LeverModel();
     }
 
-    public IActionResult OnPost()
+    public IActionResult OnGet()
     {
-        if (GridSize is >= 2)
+        return Page();
+    }
+    
+    
+    public IActionResult OnPostResizeGrid(int gridSize)
+    {
+        _leverModel.Resize(gridSize, gridSize);
+
+        return new JsonResult(new { status = "success", message = "Data received successfully" });
+    }
+    
+    public IActionResult OnPostToggleChangeColor(int row, int col)
+    {
+        _leverModel.ToggleCell(row, col);
+        _leverModel.ToggleFullCol(col);
+        _leverModel.ToggleFullRow(row);
+        
+        return new JsonResult(_leverModel.GetArray());
+    }
+
+    private IActionResult OnPostWinResult()
+    {
+        var counterForAllGreen = 0;
+        var counterForAllRed = 0;
+        var size = _leverModel.GetArray().GetLength(0);
+        for (var i = 0; i < size; i++)
         {
-            return Page();
+            for (var j = 0; j < size; j++)
+            {
+                if (_leverModel.GetArray()[i, j] == 1)
+                {
+                    counterForAllGreen++;
+                }
+
+                if (_leverModel.GetArray()[i, j] == 0)
+                {
+                    counterForAllRed++;
+                }
+            }
         }
 
-        ErrorMessage = "Wrong size of the field. Size should be from 2 to 10.";
-        return Page();
+        if (counterForAllGreen == size * size || counterForAllRed == size * size)
+        {
+            return RedirectToPage("/WinPage");
+        }
+
+        return new OkResult();
+    }
+
+    public int[,] GetLeverArray()
+    {
+        return _leverModel.GetArray();
     }
 }

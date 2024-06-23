@@ -6,33 +6,19 @@ namespace TheSafeOfThePilotBrothers.Controllers;
 public class LeverController : Controller
 {
     private readonly LeverModel _leverModel;
+    [BindProperty]
+    public int GridSize { get; set; }
 
-    public LeverController(int rows, int cols)
+    public LeverController()
     {
-        _leverModel = new LeverModel(rows, cols);
+        _leverModel = new LeverModel();
     }
-
-    public IActionResult Index()
-    {
-        return View(_leverModel.GetArray());
-    }
-
+    
     [HttpPost]
-    public IActionResult ToggleCellColor(int row, int col)
+    public IActionResult OnPostResizeGrid()
     {
-        _leverModel.ToggleCell(row, col);
-        
-        _leverModel.ToggleFullRow(row);
-        
-        _leverModel.ToggleFullCol(col);
+        _leverModel.Resize(GridSize, GridSize);
 
-        return Ok();
-    }
-
-    [HttpPost]
-    public IActionResult Resize(int rows, int cols)
-    {
-        _leverModel.Resize(rows, cols);
-        return RedirectToAction("Index");
+        return Json(new { status = "success", message = "Data received successfully" });
     }
 }

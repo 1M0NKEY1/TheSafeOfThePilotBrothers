@@ -3,43 +3,53 @@
 public class LeverModel
 {
     private int[,] _lever;
-
+    private const int StartSize = 4;
+    
     private void RandomArray()
     {
-        var rnd = new Random();
-        for (var i = 0; i < _lever.GetLength(0); i++)
+        while (true)
         {
-            for (var j = 0; j < _lever.GetLength(1); j++)
+            var rnd = new Random();
+            var counterAll1 = 0;
+            var counterAll0 = 0;
+            for (var i = 0; i < _lever.GetLength(0); i++)
             {
-                _lever[i, j] = rnd.Next(2);
+                for (var j = 0; j < _lever.GetLength(1); j++)
+                {
+                    _lever[i, j] = rnd.Next(2);
+                    if (_lever[i, j] == 1)
+                    {
+                        counterAll1++;
+                    }
+                    else if (_lever[i, j] == 0)
+                    {
+                        counterAll0++;
+                    }
+                }
             }
+
+            if (counterAll1 == _lever.GetLength(0) * _lever.GetLength(1) || counterAll0 == _lever.GetLength(0) * _lever.GetLength(1))
+            {
+                continue;
+            }
+
+            break;
         }
     }
 
-    public LeverModel(int rows, int cols)
+    public LeverModel()
     {
-        _lever = new int[rows, cols];
+        _lever = new int[StartSize, StartSize];
         RandomArray();
     }
 
     public void Resize(int newRows, int newCols)
     {
-        var tmpLever = new int[newRows, newCols];
-        var rows = Math.Min(newRows, _lever.GetLength(0));
-        var cols = Math.Min(newCols, _lever.GetLength(1));
-
-        for (var i = 0; i < rows; i++)
-        {
-            for (var j = 0; j < cols; j++)
-            {
-                tmpLever[i, j] = _lever[i, j];
-            }
-        }
-
-        _lever = tmpLever;
+        _lever = new int[newRows, newCols];
+        RandomArray();
     }
 
-    // Can be without else if, only else
+    
     public void ToggleCell(int row, int col)
     {
         if (_lever[row, col] == 1)

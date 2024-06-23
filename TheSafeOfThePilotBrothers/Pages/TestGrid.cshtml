@@ -4,13 +4,13 @@
     ViewData["Title"] = "Test Grid";
 }
 
-<h2>Grid Size</h2>
+<h2>Test Grid</h2>
 
-<form method="post">
-    <label for="size">Enter size:</label>
-    <input type="number" id="size" name="newSize" min="2" value="@Model.GetLeverArray().GetLength(0)">
-    <button type="submit">Update Grid</button>
-</form>
+<div>
+    <label for="gridSize">Размер сетки:</label>
+    <input type="number" id="gridSize" name="gridSize" min="2">
+    <button type="button" onclick="resizeGrid()">Update Grid</button>
+</div>
 
 <div>
     <table id="gridTable">
@@ -35,8 +35,10 @@
                         }
                         <div id="@cellId" class="gridCell"
                              style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
-                             onclick="toggleCell(@cellId, @i, @j)">
-                            @* @cellValue.ToString() *@
+                             onclick="toggleColor(@i, @j)">
+                            @{
+                                Model.OnPostToggleChangeCellValue(i, j);
+                            }
                         </div>
                     </td>
                 }
@@ -44,3 +46,58 @@
         }
     </table>
 </div>
+
+<script>
+    function toggleColor(row, col) {
+        var cell = document.getElementById("gridCell").rows[row].cells[col];
+        var cellValue = cell.innerText.trim() === '1' ? 0 : 1;
+        cell.innerText = cellValue.toString();
+        cell.style.backgroundColor = cellValue === 1 ? 'green' : 'red';
+        
+        for (var i = 0; i < @Model.GetLeverArray().GetLength(0); i++) {
+            if (i !== col) {
+                var rowCellId = "cell_" + row + "_" + i;
+                var rowCell = document.getElementById(rowCellId);
+                var rowValue = rowCell.innerText.trim() === '1' ? 0 : 1;
+                rowCell.innerText = rowValue.toString();
+                rowCell.style.backgroundColor = rowValue === 1 ? 'green' : 'red';
+            }
+        }
+        
+        for (var j = 0; j < @Model.GetLeverArray().GetLength(1); j++) {
+            if (j !== row) {
+                var colCellId = "cell_" + j + "_" + col;
+                var colCell = document.getElementById(colCellId);
+                var colValue = colCell.innerText.trim() === '1' ? 0 : 1;
+                colCell.innerText = colValue.toString();
+                colCell.style.backgroundColor = colValue === 1 ? 'green' : 'red';
+            }
+        }
+    
+        $.ajax({
+            type: "POST",
+            url: "/TestGrid?handler=OnPostToggleChangeCellValue&row=" + row + "&col=" + col
+        });
+    }
+
+    function resizeGrid() {
+        var newSize = document.getElementById("gridSize").value;
+        if (newSize && !isNaN(newSize) && parseInt(newSize) > 0) {
+            // Отправляем запрос на сервер для изменения размера сетки
+            $.ajax({
+                type: "POST",
+                url: "/TestGrid?handler=OnPostResizeGrid&newSize=" + newSize,
+                success: function(response) {
+                    // Обновляем сетку с новыми данными
+                    updateGrid(response);
+                    console.log("Сетка успешно изменена на размер " + newSize);
+                },
+                error: function(error) {
+                    console.error("Произошла ошибка при изменении размера сетки", error);
+                }
+            });
+        } else {
+            alert("Введите корректный размер сетки.");
+        }
+    }
+</script>

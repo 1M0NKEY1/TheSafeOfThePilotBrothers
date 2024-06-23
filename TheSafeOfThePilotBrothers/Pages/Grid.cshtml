@@ -1,76 +1,102 @@
 ﻿@page
 @model TheSafeOfThePilotBrothers.Pages.Grid
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Grid with Levers</title>
-    <style>
-        .grid-container {
-            display: grid;
-            gap: 40px;
-            padding: 40px;
-            background-color: #f0f0f0;
-            justify-items: center;
-        }
-
-        .grid-item {
-            background-color: #ccc;
-            padding: 0;
-            position: relative;
-            width: calc(50% - 10px);
-            padding-bottom: calc(50% - 10px);
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-<form method="post">
-    <label for="gridSize">Write size of the grid:</label>
-    <input type="number" id="gridSize" name="gridSize" min="2" max="10" required />
-    <button type="submit">Create grid</button>
-</form>
-
-@if (Model.GridSize.HasValue)
-{
-<h2>Grid size @Model.GridSize.Value x @Model.GridSize.Value:</h2>
-<div class="grid-container" style="grid-template-columns: repeat(@Model.GridSize.Value, 1fr);">
-    @for (var i = 0; i < Model.GridSize.Value; i++)
-    {
-        for (var j = 0; j < Model.GridSize.Value; j++)
-        {
-        <div class="grid-item"></div>
-        }
-    }
-</div>
+@{
+ViewData["Title"] = "Grid";
 }
 
-<script>
-    function getRandomColor() {
-        var colors = ['#e74c3c', '#2ecc71'];
-        var randomIndex = Math.floor(Math.random() * colors.length);
-        return colors[randomIndex];
-    }
+<body>
+    <h2>Grid</h2>
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var gridItems = document.querySelectorAll('.grid-item');
+    <form method="post">
+        <label for="gridSize">Enter grid size:</label>
+        <input type="number" id="gridSize" name="gridSize" min="2" value="@Model.GridSize"/>
+        <button onclick="updateGrid()">Submit Grid</button>
+    </form>
 
-        gridItems.forEach(function(item) {
-            item.style.backgroundColor = getRandomColor();
+    <div>
+        <table id="gridTable">
+            @for (var i = 0; i < Model.GridSize; i++)
+            {
+                <tr>
+                    @for (var j = 0; j < Model.GridSize; j++)
+                    {
+                        <td>
+                            @{
+                                Model.OnPostResizeGrid(Model.GridSize);
+                                var cellValue = Model.GetLeverArray()[i, j];
+                                string backgroundColor;
+                                if (cellValue == 1)
+                                {
+                                    backgroundColor = "green";
+                                }
+                                else
+                                {
+                                    backgroundColor = "red";
+                                }
 
-            item.addEventListener('click', function() {
-                var currentColor = this.style.backgroundColor;
-
-                if (currentColor === 'rgb(46, 204, 113)' || currentColor === '#2ecc71') {
-                    this.style.backgroundColor = '#e74c3c';
-                } else {
-                    this.style.backgroundColor = '#2ecc71';
-                }
-            });
-        });
-    });
-
-</script>
-
+                                string cellId = $"cell_{i}_{j}";
+                            }
+                            <div id="@cellId" class="gridCell"
+                                 style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
+                                 onclick="toggleCellColor('@cellId', @i, @j)">
+                                @cellValue.ToString()
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
 </body>
-</html>
+
+<script>
+    function toggleCellColor(cellId, row, col) {
+        // Переключение значения кликнутой ячейки
+        var cell = document.getElementById(cellId);
+        var cellValue = cell.innerText.trim() === '1' ? 0 : 1;
+        cell.innerText = cellValue.toString();
+        cell.style.backgroundColor = cellValue === 1 ? 'green' : 'red';
+
+        // Переключение всех ячеек в строке
+        for (var i = 0; i < @Model.GetLeverArray().GetLength(0); i++) {
+            if (i !== col) {
+                var rowCellId = "cell_" + row + "_" + i;
+                var rowCell = document.getElementById(rowCellId);
+                var rowValue = rowCell.innerText.trim() === '1' ? 0 : 1;
+                rowCell.innerText = rowValue.toString();
+                rowCell.style.backgroundColor = rowValue === 1 ? 'green' : 'red';
+            }
+        }
+
+        // Переключение всех ячеек в столбце
+        for (var j = 0; j < @Model.GetLeverArray().GetLength(1); j++) {
+            if (j !== row) {
+                var colCellId = "cell_" + j + "_" + col;
+                var colCell = document.getElementById(colCellId);
+                var colValue = colCell.innerText.trim() === '1' ? 0 : 1;
+                colCell.innerText = colValue.toString();
+                colCell.style.backgroundColor = colValue === 1 ? 'green' : 'red';
+            }
+        }
+        
+        
+    }
+    
+    
+    function updateGrid() {
+    var gridSize = document.getElementById("gridSize").value;
+        $.ajax({
+            type: "POST",
+            url: "/Grid/ResizeGrid",
+            data: { gridSize: gridSize },
+            success: function (response) { 
+                console.log(response);
+            },
+            error: function (error) { 
+            console.error('Error:', error);
+            }
+        },
+        )
+    }
+</script>

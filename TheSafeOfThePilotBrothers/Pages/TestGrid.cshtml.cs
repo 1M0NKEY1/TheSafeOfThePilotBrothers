@@ -7,10 +7,10 @@ namespace TheSafeOfThePilotBrothers.Pages;
 public class TestGrid : PageModel
 {
     private readonly LeverModel _leverModel;
-
-    public TestGrid(int startSize = 4)
+    
+    public TestGrid()
     {
-        _leverModel = new LeverModel(startSize, startSize);
+        _leverModel = new LeverModel();
     }
 
     public IActionResult OnGet()
@@ -27,17 +27,16 @@ public class TestGrid : PageModel
 
         _leverModel.Resize(newSize, newSize);
 
-        return RedirectToPage("/TestGrid", new { size = newSize });
+        return new JsonResult(new { gridData = _leverModel.GetArray(), size = newSize });
     }
     
-    public IActionResult OnPostToggleChangeColor(int row, int col)
+    public IActionResult OnPostToggleChangeCellValue(int row, int col)
     {
         _leverModel.ToggleCell(row, col);
         _leverModel.ToggleFullCol(col);
         _leverModel.ToggleFullRow(row);
 
-        var cellValue = _leverModel.GetArray()[row, col];
-        return new JsonResult(cellValue.ToString());
+        return new JsonResult(_leverModel.GetArray());
     }
 
     private IActionResult OnPostWinResult()
