@@ -40,7 +40,10 @@ ViewData["Title"] = "Grid";
                             <div id="@cellId" class="gridCell"
                                  style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
                                  onclick="toggleCellColor('@cellId', @i, @j)">
-                                @cellValue.ToString()
+                                @cellValue
+                                @{
+                                    Model.OnPostToggleChangeColor(i, j);
+                                }
                             </div>
                         </td>
                     }
