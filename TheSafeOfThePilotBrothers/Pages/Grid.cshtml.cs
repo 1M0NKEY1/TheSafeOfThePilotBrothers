@@ -51,8 +51,7 @@ public class Grid : PageModel
                 {
                     counterForAllGreen++;
                 }
-
-                if (_leverModel.GetArray()[i, j] == 0)
+                else
                 {
                     counterForAllRed++;
                 }

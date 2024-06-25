@@ -86,11 +86,11 @@ ViewData["Title"] = "Grid";
 
         $.ajax({
             type: 'POST',
-            url: '@Url.Page("Grid")',
+            url: '@Url.Page("Grid.cshtml")',
             data: {
                 handler: 'ToggleChangeColor',
-                i: row,
-                j: col
+                row: row,
+                col: col
             },
             success: function (response) {
                 console.log('Success');

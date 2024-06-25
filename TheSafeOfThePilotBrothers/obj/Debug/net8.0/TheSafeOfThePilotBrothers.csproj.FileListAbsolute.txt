@@ -28,3 +28,4 @@ C:\Users\Egor\RiderProjects\TheSafeOfThePilotBrothers\TheSafeOfThePilotBrothers\
 C:\Users\Egor\RiderProjects\TheSafeOfThePilotBrothers\TheSafeOfThePilotBrothers\obj\Debug\net8.0\TheSafeOfThePilotBrothers.pdb
 C:\Users\Egor\RiderProjects\TheSafeOfThePilotBrothers\TheSafeOfThePilotBrothers\obj\Debug\net8.0\TheSafeOfThePilotBrothers.genruntimeconfig.cache
 C:\Users\Egor\RiderProjects\TheSafeOfThePilotBrothers\TheSafeOfThePilotBrothers\obj\Debug\net8.0\ref\TheSafeOfThePilotBrothers.dll
+C:\Users\Egor\RiderProjects\TheSafeOfThePilotBrothers\TheSafeOfThePilotBrothers\obj\Debug\net8.0\TheSafeOfThePilotBrothers.sourcelink.json

@@ -5,8 +5,6 @@ public class LeverModel
     private int[,] _lever;
     private const int StartSize = 4;
     
-    // сделать просто рандомное количество смен крестовин, но при этом начальная сетка будет с заполненым крайним рядом
-    // и столбцом, только нужно продумать как должны крестовины вызываться, чтобы распутать
     private void RandomEvenArray()
     {
         while (true)
@@ -82,8 +80,10 @@ public class LeverModel
         {
             RandomEvenArray();
         }
-        
-        RandomOddArray();
+        else
+        {
+            RandomOddArray();
+        }
     }
 
     public void Resize(int newRows, int newCols)
@@ -93,8 +93,10 @@ public class LeverModel
         {
             RandomEvenArray();
         }
-        
-        RandomOddArray();
+        else
+        {
+            RandomOddArray();
+        }
     }
 
     
@@ -104,7 +106,7 @@ public class LeverModel
         {
             _lever[row, col] = 0;
         }
-        else if (_lever[row, col] == 0)
+        else
         {
             _lever[row, col] = 1;
         }
@@ -118,7 +120,7 @@ public class LeverModel
             {
                 _lever[row, i] = 0;
             }
-            else if (_lever[row, i] == 0)
+            else
             {
                 _lever[row, i] = 1;
             }
@@ -133,7 +135,7 @@ public class LeverModel
             {
                 _lever[i, col] = 0;
             }
-            else if (_lever[i, col] == 0)
+            else
             {
                 _lever[i, col] = 1;
             }
