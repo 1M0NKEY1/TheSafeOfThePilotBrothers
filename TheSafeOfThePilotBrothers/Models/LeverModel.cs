@@ -5,7 +5,9 @@ public class LeverModel
     private int[,] _lever;
     private const int StartSize = 4;
     
-    private void RandomArray()
+    // сделать просто рандомное количество смен крестовин, но при этом начальная сетка будет с заполненым крайним рядом
+    // и столбцом, только нужно продумать как должны крестовины вызываться, чтобы распутать
+    private void RandomEvenArray()
     {
         while (true)
         {
@@ -28,7 +30,8 @@ public class LeverModel
                 }
             }
 
-            if (counterAll1 == _lever.GetLength(0) * _lever.GetLength(1) || counterAll0 == _lever.GetLength(0) * _lever.GetLength(1))
+            if (counterAll1 == _lever.GetLength(0) * _lever.GetLength(1)
+                || counterAll0 == _lever.GetLength(0) * _lever.GetLength(1))
             {
                 continue;
             }
@@ -37,16 +40,61 @@ public class LeverModel
         }
     }
 
+    private void RandomOddArray()
+    {
+        var rnd = new Random();
+        var size = _lever.GetLength(0);
+        
+        var usedCols = new bool[size];
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                _lever[i, j] = 0;
+            }
+        }
+
+        for (int i = 0; i < size; i++)
+        {
+            var col = rnd.Next(0, size);
+            while (true)
+            {
+                if (usedCols[col])
+                {
+                    col = rnd.Next(0, size);
+                }
+                else if (!usedCols[col])
+                {
+                    break;
+                }
+            }
+            usedCols[col] = true;
+            
+            _lever[col, i] = 1;
+        }
+    }
+
     public LeverModel()
     {
         _lever = new int[StartSize, StartSize];
-        RandomArray();
+        if (_lever.GetLength(0) % 2 == 0)
+        {
+            RandomEvenArray();
+        }
+        
+        RandomOddArray();
     }
 
     public void Resize(int newRows, int newCols)
     {
         _lever = new int[newRows, newCols];
-        RandomArray();
+        if (newRows % 2 == 0)
+        {
+            RandomEvenArray();
+        }
+        
+        RandomOddArray();
     }
 
     

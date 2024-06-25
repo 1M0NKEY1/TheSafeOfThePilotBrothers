@@ -14,43 +14,44 @@ ViewData["Title"] = "Grid";
         <button onclick="updateGrid()">Submit Grid</button>
     </form>
 
-    <div>
-        <table id="gridTable">
-            @for (var i = 0; i < Model.GridSize; i++)
-            {
-                <tr>
-                    @for (var j = 0; j < Model.GridSize; j++)
-                    {
-                        <td>
-                            @{
+<div>
+    <table id="gridTable">
+        @for (var i = 0; i < Model.GridSize; i++)
+        {
+            <tr>
+                @for (var j = 0; j < Model.GridSize; j++)
+                {
+                    <td>
+                        @{
+                            if (i == 0 && j == 0)
+                            {
                                 Model.OnPostResizeGrid(Model.GridSize);
-                                var cellValue = Model.GetLeverArray()[i, j];
-                                string backgroundColor;
-                                if (cellValue == 1)
-                                {
-                                    backgroundColor = "green";
-                                }
-                                else
-                                {
-                                    backgroundColor = "red";
-                                }
-
-                                string cellId = $"cell_{i}_{j}";
                             }
-                            <div id="@cellId" class="gridCell"
-                                 style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
-                                 onclick="toggleCellColor('@cellId', @i, @j)">
-                                @cellValue
-                                @{
-                                    Model.OnPostToggleChangeColor(i, j);
-                                }
-                            </div>
-                        </td>
-                    }
-                </tr>
-            }
-        </table>
-    </div>
+                            var cellValue = Model.GetLeverArray()[i, j];
+                            string backgroundColor;
+                            if (cellValue == 1)
+                            {
+                                backgroundColor = "green";
+                            }
+                            else
+                            {
+                                backgroundColor = "red";
+                            }
+
+                            string cellId = $"cell_{i}_{j}";
+                        }
+                        <div id="@cellId" class="gridCell"
+                             style="width: 60px; height: 60px; background-color: @backgroundColor; cursor: pointer;"
+                             onclick="toggleCellColor('@cellId', @i, @j)">
+                            @cellValue.ToString()
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+
 </body>
 
 <script>
@@ -82,8 +83,22 @@ ViewData["Title"] = "Grid";
                 colCell.style.backgroundColor = colValue === 1 ? 'green' : 'red';
             }
         }
-        
-        
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Page("Grid")',
+            data: {
+                handler: 'ToggleChangeColor',
+                i: row,
+                j: col
+            },
+            success: function (response) {
+                console.log('Success');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
     }
     
     

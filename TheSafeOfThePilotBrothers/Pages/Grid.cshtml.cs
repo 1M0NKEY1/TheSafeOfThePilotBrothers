@@ -35,10 +35,10 @@ public class Grid : PageModel
         _leverModel.ToggleFullCol(col);
         _leverModel.ToggleFullRow(row);
         
-        return new JsonResult(_leverModel.GetArray());
+        return new JsonResult("Success");
     }
 
-    private IActionResult OnPostWinResult()
+    public IActionResult OnPostWinResult()
     {
         var counterForAllGreen = 0;
         var counterForAllRed = 0;
