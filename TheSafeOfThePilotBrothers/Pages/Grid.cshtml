@@ -86,35 +86,42 @@ ViewData["Title"] = "Grid";
 
         $.ajax({
             type: 'POST',
-            url: '@Url.Page("Grid.cshtml")',
-            data: {
-                handler: 'ToggleChangeColor',
-                row: row,
-                col: col
+            url: '/Grid?handler=ToggleChangeColor',
+            headers: {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
             },
-            success: function (response) {
+            data: JSON.stringify({ row: row, col: col }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response) {
                 console.log('Success');
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error:', error);
             }
         });
     }
-    
-    
+
+
     function updateGrid() {
-    var gridSize = document.getElementById("gridSize").value;
+        var gridSize = document.getElementById("gridSize").value;
         $.ajax({
             type: "POST",
             url: "/Grid/ResizeGrid",
-            data: { gridSize: gridSize },
-            success: function (response) { 
-                console.log(response);
+            headers: {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
             },
-            error: function (error) { 
-            console.error('Error:', error);
+            data: JSON.stringify({ gridSize: gridSize }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (response) {
+                console.log('Response:', response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
             }
-        },
-        )
+        });
     }
 </script>
